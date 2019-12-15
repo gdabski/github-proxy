@@ -1,2 +1,2 @@
 # github-proxy
-Demo service accessing the publi GitHub API.
+Demo service accessing the public GitHub API.
