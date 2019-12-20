@@ -1,11 +1,17 @@
 package gdabski.github.proxy.dao;
 
+import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpMethod.GET;
+
 import java.time.Duration;
 
 import gdabski.github.proxy.dao.model.Repository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +24,9 @@ import org.springframework.web.util.UriTemplate;
 @Component
 public class GitHubV3RestClient {
 
-    private static final UriTemplate REPOSITORY_ENDPOINT = new UriTemplate("/repos/{owner}/{fullName}");
+    private static final MediaType GITHUB_V3_MEDIA_TYPE = new MediaType("application","vnd.github.v3+json");
+
+    private static final UriTemplate REPOSITORY_ENDPOINT = new UriTemplate("/repos/{owner}/{name}");
 
     private final RestTemplate restTemplate;
 
@@ -44,7 +52,12 @@ public class GitHubV3RestClient {
     public Repository getRepository(String owner, String name) {
         String url = REPOSITORY_ENDPOINT.expand(owner, name).toString();
         log.info("Requesting repository data from GitHub with URL {}", url);
-        ResponseEntity<Repository> response = restTemplate.getForEntity(url, Repository.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(singletonList(GITHUB_V3_MEDIA_TYPE));
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<Repository> response = restTemplate.exchange(url, GET, requestEntity, Repository.class);
         log.info("Received repository data from GitHub with response status {}", response.getStatusCodeValue());
         return response.getBody();
     }
