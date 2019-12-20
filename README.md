@@ -1,4 +1,4 @@
-#### GitHub Proxy
+# GitHub Proxy
 
 Demo microservice accessing the public [V3 GitHub API](https://developer.github.com/v3/).
 
