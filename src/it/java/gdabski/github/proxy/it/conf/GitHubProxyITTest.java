@@ -4,7 +4,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 import java.lang.annotation.*;
 
-import gdabski.github.proxy.GitHubProxyApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,10 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 @Documented
 @Inherited
 @ActiveProfiles("it")
-@ContextConfiguration(
-        classes = {GitHubProxyApplication.class, GitHubProxyITConfiguration.class},
-        initializers = {DynamicPropertyContextInitializer.class}
-)
+@ContextConfiguration(initializers = DynamicPropertyContextInitializer.class)
 @SpringBootTest(webEnvironment = DEFINED_PORT)
 public @interface GitHubProxyITTest {
 }
